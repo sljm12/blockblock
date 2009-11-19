@@ -2,7 +2,7 @@
 ;Grid operations
 
 (setf *grid* (make-array '(4 6) :initial-contents 
-			 '((0 1 1 1 0 0) 
+			 '((0 1 2 1 0 0) 
 			   (0 0 0 1 1 1) 
 			   (1 1 1 1 1 0)
 			   (1 1 1 1 0 0)
