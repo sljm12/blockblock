@@ -1,5 +1,5 @@
-(setf *red-image* "f:/lisp/lispgame/red.bmp")
-(setf *blue-image* "f:/lisp/lispgame/blue.bmp")
+(setf *red-image* "g:/lisp/lispgame/red.bmp")
+(setf *blue-image* "g:/lisp/lispgame/blue.bmp")
 
 
 (defun run ()
@@ -13,12 +13,19 @@
 		       (when (SDL:KEY= KEY :SDL-KEY-ESCAPE) (SDL:PUSH-QUIT-EVENT)))
       (:idle ()
 	     ;(sdl:draw-surface (sdl:load-image *red-image*))
-	     (draw-grid *grid* 20 *grid-pic*)
+	     ;(draw-grid *grid* 20 *grid-pic*)
 	     (sdl:update-display))
       ;(:video-expose-event () (sdl:update-display))
       )
     )
   )
+
+(defstruct color-block x y color)
+(defstruct user-block b1 b2)
+
+(defun draw-user-blocks ()
+  
+)
 
 (defun draw-grid (grid gridsize pic-store)
   (loop for y from 0 to 3 do
