@@ -37,14 +37,20 @@
 ;	    )))
 
 (defun draw-grid (grid gridsize pic-store)
-  (map-draw-grid 3 3 #'draw-grid-at (list grid pic-store))
+  (map-draw-grid 3 3 #'draw-grid-at (list grid pic-store 100 100))
   )
 
-(defun draw-grid-at (x y grid pic-store)
-  (cond ((not (= (get_gridnum x y grid) 0))
+;Draw a grid to the screen
+;grid-x, grid-y the x and y of the grid that is to be drawn
+;grid the array that stores the grid
+;pic-store the picture store 
+;startx,starty the x,y position to start drawing the grid
+(defun draw-grid-at (grid-x grid-y grid pic-store startx starty)
+  (cond ((not (= (get_gridnum grid-x grid-y grid) 0))
 		 (sdl:draw-surface-at-* 
-		  (get-image (get_gridnum x y *grid*) pic-store) 
-		  (* x 20) (* y 20)))))
+		  (get-image (get_gridnum grid-x grid-y *grid*) pic-store) 
+		  (+ (* grid-x 20) startx) 
+		  (+ (* grid-y 20) starty)))))
 
 
 
