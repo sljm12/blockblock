@@ -5,7 +5,7 @@
 (defun run ()
   (let ((ub (make-user-block :b1 (make-color-block :x 1 :y 1 :color 1)
 			     :b2 (make-color-block :x 1 :y 1 :color 1)))
-	;(*grid-pic* (load-grid-pics))
+	(grid-parameters (make-grid-parameters :block-size 20 :startx 0 :starty 0 :grid-size-x 10 :grid-size-y 10))
 	)
 	     
   (sdl:with-init ()
@@ -16,7 +16,13 @@
     (sdl:with-events()
       (:quit-event () t)
       (:key-down-event (:key key)
-		       (when (SDL:KEY= KEY :SDL-KEY-ESCAPE) (SDL:PUSH-QUIT-EVENT)))
+		       (when 
+			   (SDL:KEY= KEY :SDL-KEY-ESCAPE) 
+			 (SDL:PUSH-QUIT-EVENT))
+		       (when (SDL:KEY= KEY :SDL-KEY-LEFT)
+			 (SDL:PUSH-QUIT-EVENT))
+		       (when (SDL:KEY= KEY :SDL-KEY-RIGHT)
+			 ()))
       (:idle ()
 	     (draw-grid *grid* 20 *grid-pic*)
 	     (draw-user-blocks ub *grid-pic*)
@@ -25,23 +31,42 @@
     ))
   )
 
+;Standard parameters for the grid
+(defstruct grid-parameters block-size startx starty grid-size-x grid-size-y)
+;Define one block
 (defstruct color-block x y color)
+;the user blocks consists of 2 color-block
 (defstruct user-block b1 b2)
 
-(defun draw-user-blocks (user-block pic-store)
+(defun draw-user-blocks (user-block pic-store grid-parameters)
   (let ((b1 (user-block-b1 user-block))
 	(b2 (user-block-b2 user-block)))
     (if (not (eq b1 nil))
-	(draw-block b1 pic-store))
+	(draw-block b1 pic-store grid-parameters))
     (if (not (eq b2 nil))
-	(draw-block b2 pic-store))
+	(draw-block b2 pic-store grid-parameters))
     ))
 
-(defun draw-block (c-block pic-store)
-  (sdl:draw-surface-at-* 
-   (get-image (color-block-color c-block)  pic-store) 
-   (color-block-x c-block) 
-   (color-block-y c-block)))
+(defun rotate-user-blocks (direction user-block)
+  (cond ((= direction 1)
+	 (when (need-rotate? user-block)))
+	)
+  )
+
+(defun rotate-left (user-block)
+
+
+(defun need-rotate? (user-block)
+  (if (or (eq (user-block-b1 user-block) nil)
+	  (eq (user-block-b2 user-block) nil))
+      nil t))
+
+(defun draw-block (c-block pic-store grid-parameters)
+  (let ((block-size (grid-parameters-block-size grid-parameters)))
+    (sdl:draw-surface-at-* 
+     (get-image (color-block-color c-block)  pic-store) 
+     (color-block-x c-block) 
+     (color-block-y c-block))))
 
 (defun draw-grid (grid gridsize pic-store)
   (map-draw-grid 3 3 #'draw-grid-at (list grid pic-store 100 100))
